@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Token Saver Translator</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-glow page-glow-a"></div>
+    <div class="page-glow page-glow-b"></div>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <p class="eyebrow">Prompt Optimizer</p>
+          <h1>Token Saver Translator</h1>
+          <p class="lede">
+            Compare natural languages and compact formats, then pick the cheapest faithful prompt.
+          </p>
+        </div>
+
+        <section class="panel metric-stack float-in">
+          <div class="metric">
+            <span class="metric-label">Mode</span>
+            <strong id="modeValue">Waiting</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Difficulty score</span>
+            <strong id="difficultyValue">0 / 100</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Selected model</span>
+            <strong id="selectedModelValue">Auto</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Suggested model</span>
+            <strong id="suggestedModelValue">Auto</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Cheapest option</span>
+            <strong id="languageValue">None yet</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Tokens saved</span>
+            <strong id="tokensSavedValue">0</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Estimated cost saved</span>
+            <strong id="costSavedValue">$0.000000</strong>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Estimated speedup</span>
+            <strong id="speedSavedValue">0 ms</strong>
+          </div>
+        </section>
+
+        <section class="panel float-in">
+          <h2>Estimate details</h2>
+          <dl class="details-grid">
+            <div>
+              <dt>Original tokens</dt>
+              <dd id="originalTokensValue">0</dd>
+            </div>
+            <div>
+              <dt>Optimized tokens</dt>
+              <dd id="optimizedTokensValue">0</dd>
+            </div>
+            <div>
+              <dt>Original cost</dt>
+              <dd id="originalCostValue">$0.000000</dd>
+            </div>
+            <div>
+              <dt>Optimized cost</dt>
+              <dd id="optimizedCostValue">$0.000000</dd>
+            </div>
+            <div>
+              <dt>Original latency</dt>
+              <dd id="originalLatencyValue">0 ms</dd>
+            </div>
+            <div>
+              <dt>Optimized latency</dt>
+              <dd id="optimizedLatencyValue">0 ms</dd>
+            </div>
+          </dl>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <section class="panel composer reveal-up">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Input</p>
+              <h2>Paste text or upload a PDF</h2>
+            </div>
+            <div class="composer-actions">
+              <label class="select-wrap">
+                <span>Model route</span>
+                <select id="modelMode">
+                  <option value="auto">Auto cheapest safe route</option>
+                </select>
+              </label>
+              <button id="submitButton" class="primary-button">Optimize</button>
+            </div>
+          </div>
+
+          <div class="upload-row">
+            <label class="upload-tile" for="pdfInput">
+              <input id="pdfInput" type="file" accept="application/pdf" />
+              <span class="upload-title">Drop in a PDF</span>
+              <span class="upload-subtitle">We will extract the text, compare multilingual options, and price the result.</span>
+            </label>
+            <div id="sourceBadge" class="source-badge">Using pasted text only</div>
+          </div>
+
+          <label class="composer-field" for="sourceText">
+            <textarea
+              id="sourceText"
+              placeholder="Example: rewrite the content below into the cheapest faithful prompt possible, preserving audience, deadline, and CTA."
+            ></textarea>
+          </label>
+
+          <div class="composer-footer">
+            <p id="statusLine" class="status-line">
+              Add an `OPENAI_API_KEY` to use live translation. Without one, the app runs in local fallback preview mode.
+            </p>
+            <p id="companionNote" class="companion-note">
+              Cute Friendly Codex London is ready, and yes, July 1, 2026 in London feels like a fun day to be out.
+            </p>
+          </div>
+        </section>
+
+        <section class="panel result-panel reveal-up delay-1">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Output</p>
+              <h2>Cheapest faithful prompt</h2>
+            </div>
+            <button id="copyButton" class="ghost-button" disabled>Copy</button>
+          </div>
+
+          <div id="resultText" class="result-text empty">
+            Your optimized prompt will appear here.
+          </div>
+
+          <div class="result-meta">
+            <div>
+              <span class="meta-label">Why this option won</span>
+              <p id="rationaleText">
+                The app will explain why it chose a language once a result comes back.
+              </p>
+            </div>
+            <div class="route-summary">
+              <div>
+                <span class="meta-label">Route summary</span>
+                <p id="routeText">The model route and difficulty analysis will appear here.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="dashboard-grid reveal-up delay-2">
+          <section class="panel alternatives-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Candidates</p>
+                <h2>Other cheaper-looking options</h2>
+              </div>
+            </div>
+            <div id="candidateList" class="candidate-list">
+              <div class="history-empty">Candidate languages and structured formats will appear here.</div>
+            </div>
+          </section>
+
+          <section class="panel models-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Model Costs</p>
+                <h2>What each model would cost</h2>
+              </div>
+            </div>
+            <div id="modelGrid" class="model-grid">
+              <div class="history-empty">Per-model cost comparisons will appear here for each run.</div>
+            </div>
+          </section>
+        </section>
+
+        <section class="panel history-panel reveal-up delay-3">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Session</p>
+              <h2>Prompt runs</h2>
+            </div>
+          </div>
+          <div id="historyList" class="history-list">
+            <div class="history-empty">Each prompt run will be pinned here with its route, model, source type, and savings.</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+  </html>
